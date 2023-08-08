@@ -15,7 +15,7 @@ class IndexRequest extends FormRequest
     {
         return [
             'id' => 'numeric',
-            'user_id' => 'numeric',
+            'user_id' => 'required|numeric',
         ];
     }
 }

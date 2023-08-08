@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\User\IndexRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
@@ -19,7 +18,6 @@ class UserController extends Controller
     public function index(IndexRequest $request): AnonymousResourceCollection
     {
         $users = User::all();
-
         return UserResource::collection($users);
     }
 
@@ -33,12 +31,16 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-
     /**
      * Update the specified resource in storage.
+     * @param UpdateRequest $request
+     * @param User $user
+     * @return UserResource
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateRequest $request, User $user)
     {
+        $user->update($request->all());
+        $user = User::find($user->id);
         return new UserResource($user);
     }
 }

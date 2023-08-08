@@ -6,7 +6,9 @@ use App\Http\Requests\Todo\IndexRequest;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Http\Resources\TodoResource;
+use App\Http\Resources\UserResource;
 use App\Models\Todo;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -20,7 +22,6 @@ class TodoController extends Controller
     public function index(IndexRequest $request): AnonymousResourceCollection
     {
         $todos = Todo::all()->where('user_id', $request->get('user_id'));
-
         return TodoResource::collection($todos);
     }
 
@@ -32,7 +33,6 @@ class TodoController extends Controller
     public function store(StoreRequest $request): TodoResource
     {
         $todo = Todo::create($request->all());
-
         return new TodoResource($todo);
     }
 
@@ -54,18 +54,19 @@ class TodoController extends Controller
      */
     public function update(UpdateRequest $request, Todo $todo): TodoResource
     {
+        $todo->update($request->all());
+        $todo = Todo::find($todo->id);
         return new TodoResource($todo);
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param string $id
+     * @param Todo $todo
      * @return JsonResponse
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(Todo $todo): JsonResponse
     {
-        Todo::find($id)->delete();
-
+        $todo->delete();
         return response()->json(null, 204);
     }
 }
