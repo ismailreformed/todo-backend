@@ -6,9 +6,7 @@ use App\Http\Requests\Todo\IndexRequest;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Http\Resources\TodoResource;
-use App\Http\Resources\UserResource;
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -28,12 +26,16 @@ class TodoController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param StoreRequest $request
-     * @return TodoResource
+     * @return JsonResponse
      */
-    public function store(StoreRequest $request): TodoResource
+    public function store(StoreRequest $request): JsonResponse
     {
         $todo = Todo::create($request->all());
-        return new TodoResource($todo);
+
+        return response()->json([
+            'data' => new TodoResource($todo),
+            'message' => __('todo_created'),
+        ]);
     }
 
     /**
@@ -50,13 +52,16 @@ class TodoController extends Controller
      * Update the specified resource in storage.
      * @param UpdateRequest $request
      * @param Todo $todo
-     * @return TodoResource
+     * @return JsonResponse
      */
-    public function update(UpdateRequest $request, Todo $todo): TodoResource
+    public function update(UpdateRequest $request, Todo $todo): JsonResponse
     {
         $todo->update($request->all());
         $todo = Todo::find($todo->id);
-        return new TodoResource($todo);
+        return response()->json([
+            'data' => new TodoResource($todo),
+            'message' => __('todo_updated'),
+        ]);
     }
 
     /**
