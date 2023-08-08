@@ -19,7 +19,7 @@ Route::get('/', function (Request $request) {
 });
 
 Route::group(['prefix' => 'api'], function () {
-
+    Route::apiResource('todos', 'TodoController');
 });
 
 //
