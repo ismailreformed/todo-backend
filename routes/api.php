@@ -21,19 +21,20 @@ Route::get('/', function (Request $request) {
 });
 
 Route::group(['prefix' => 'api'], function () {
-    Route::get('users', [UserController::class, 'index']);
-    Route::post('users', [UserController::class, 'store']);
-    Route::put('users/{user}', [UserController::class, 'update']);
-    Route::get('users/{user}', [UserController::class, 'show']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
 
-    Route::get('todos', [TodoController::class, 'index']);
-    Route::post('todos', [TodoController::class, 'store']);
-    Route::put('todos/{todo}', [TodoController::class, 'update']);
-    Route::get('todos/{todo}', [TodoController::class, 'show']);
-    Route::delete('todos/{todo}', [TodoController::class, 'destroy']);
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+
+        Route::get('users', [UserController::class, 'index']);
+        Route::put('users/{user}', [UserController::class, 'update']);
+        Route::get('users/{user}', [UserController::class, 'show']);
+
+        Route::get('todos', [TodoController::class, 'index']);
+        Route::post('todos', [TodoController::class, 'store']);
+        Route::put('todos/{todo}', [TodoController::class, 'update']);
+        Route::get('todos/{todo}', [TodoController::class, 'show']);
+        Route::delete('todos/{todo}', [TodoController::class, 'destroy']);
+    });
 });
-
-//
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
