@@ -4,7 +4,7 @@ namespace App\Http\Requests\Todo;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => 'string|min:2',
+            'id' => 'numeric',
+            'user_id' => 'numeric',
         ];
     }
 }
