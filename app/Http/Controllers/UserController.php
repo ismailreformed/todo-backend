@@ -2,63 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Todo\StoreRequest;
+use App\Http\Requests\User\IndexRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @param IndexRequest $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(IndexRequest $request): AnonymousResourceCollection
     {
-        //
-    }
+        $users = User::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return UserResource::collection($users);
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param StoreRequest $request
+     * @return UserResource
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request): UserResource
     {
-        //
+        $user = User::create($request->all());
+
+        return new UserResource($user);
     }
 
     /**
      * Display the specified resource.
+     * @param User $user
+     * @return UserResource
      */
-    public function show(string $id)
+    public function show(User $user): UserResource
     {
-        //
+        return new UserResource($user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return new UserResource($user);
     }
 }
