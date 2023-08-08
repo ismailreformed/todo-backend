@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Todo\IndexRequst;
+use App\Http\Requests\Todo\IndexRequest;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Http\Resources\TodoResource;
@@ -14,10 +14,10 @@ class TodoController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @param IndexRequst $request
+     * @param IndexRequest $request
      * @return AnonymousResourceCollection
      */
-    public function index(IndexRequst $request): AnonymousResourceCollection
+    public function index(IndexRequest $request): AnonymousResourceCollection
     {
         $todos = Todo::all()->where('user_id', $request->get('user_id'));
 
