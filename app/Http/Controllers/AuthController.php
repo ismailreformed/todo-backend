@@ -1,26 +1,25 @@
 <?php
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * @param LoginRequest $request
      * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
         $credentials = $request->only('email', 'password');
 
-        $token = Auth::attempt($credentials);
+        $token = auth('api')->attempt($credentials);
 
         if (!$token) {
             return response()->json([
@@ -28,14 +27,11 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = auth('api')->user();
 
         return response()->json([
             'user' => new UserResource($user),
-            'authorization' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+            'token' => $token,
         ]);
     }
 
@@ -59,7 +55,7 @@ class AuthController extends Controller
      */
     public function logout(): JsonResponse
     {
-        Auth::logout();
+        auth('api')->logout();
         return response()->json([
             'message' => 'Successfully logged out',
         ]);
